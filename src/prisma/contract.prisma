@@ -1,0 +1,407 @@
+// use prisma-8
+
+// Tipos con nombre reutilizables.
+// TimestampString = columna `timestamp` que el código recibe como string (no requiere Temporal).
+types {
+  UpdatedAt = TimestampString @onCreate(now()) @onUpdate(now())
+}
+
+// ============================================================
+// CATÁLOGOS
+// ============================================================
+
+model EstadoUsuario {
+  id          Int        @id @default(autoincrement())
+  nombre      VarChar(30) @unique
+  descripcion VarChar(255)
+  usuarios    Usuario[]
+
+  @@map("estado_usuario")
+}
+
+model Rol {
+  id          Int        @id @default(autoincrement())
+  nombre      VarChar(30) @unique
+  descripcion VarChar(255)
+  usuarios    Usuario[]
+
+  @@map("rol")
+}
+
+model EstadoOrden {
+  id          Int           @id @default(autoincrement())
+  nombre      VarChar(30)    @unique
+  descripcion VarChar(255)
+  ordenes     OrdenCompra[]
+
+  @@map("estado_orden")
+}
+
+model EstadoSalida {
+  id          Int                @id @default(autoincrement())
+  nombre      VarChar(30)         @unique
+  descripcion VarChar(255)
+  salidas     MovimientoSalida[]
+
+  @@map("estado_salida")
+}
+
+model EstadoCliente {
+  id          Int       @id @default(autoincrement())
+  nombre      VarChar(30) @unique
+  descripcion VarChar(255)
+  clientes    Cliente[]
+
+  @@map("estado_cliente")
+}
+
+model TipoPersona {
+  id          Int       @id @default(autoincrement())
+  nombre      VarChar(30) @unique
+  descripcion VarChar(100)
+  clientes    Cliente[]
+
+  @@map("tipo_persona")
+}
+
+model Categoria {
+  id          Int        @id @default(autoincrement())
+  nombre      VarChar(30) @unique
+  descripcion VarChar(100)
+  productos   Producto[]
+
+  @@map("categoria")
+}
+
+model Presentacion {
+  id                  Int                  @id @default(autoincrement())
+  nombre              VarChar(30)           @unique
+  descripcion         VarChar(100)
+  detallesOrdenCompra DetalleOrdenCompra[]
+  lotesDetalle        LoteDetalle[]
+
+  @@map("presentacion")
+}
+
+model EstadoCalidad {
+  id           Int           @id @default(autoincrement())
+  nombre       VarChar(30)    @unique
+  descripcion  VarChar(100)
+  lotesDetalle LoteDetalle[]
+
+  @@map("estado_calidad")
+}
+
+model AspectoVisual {
+  id           Int           @id @default(autoincrement())
+  nombre       VarChar(30)    @unique
+  descripcion  VarChar(100)
+  lotesDetalle LoteDetalle[]
+
+  @@map("aspecto_visual")
+}
+
+model MermaTipo {
+  id          Int        @id @default(autoincrement())
+  nombre      VarChar(50) @unique
+  descripcion VarChar(150)
+  mermas      Merma[]
+
+  @@map("merma_tipo")
+}
+
+model Almacen {
+  id          Int                 @id @default(autoincrement())
+  nombre      VarChar(30)          @unique
+  descripcion VarChar(255)
+  stocks      StockActual[]
+  ingresos    MovimientoIngreso[]
+  salidas     MovimientoSalida[]
+
+  @@map("almacen")
+}
+
+// ============================================================
+// PERSONAS
+// ============================================================
+
+model Colaborador {
+  id             Int                @id @default(autoincrement())
+  nombres        VarChar(100)
+  apellidos      VarChar(100)
+  documento      VarChar(20)         @unique
+  telefono       VarChar(20)         @unique
+  usuario        Usuario?
+  ventasComoVend MovimientoSalida[] @relation("VendedorSalida")
+
+  @@map("colaborador")
+}
+
+model Usuario {
+  id              Int           @id @default(autoincrement())
+  usuario         VarChar(20)    @unique
+  hashPassword    VarChar(255)   @map("hash_password")
+  estadoUsuarioId Int           @map("estado_usuario_id")
+  rolId           Int           @map("rol_id")
+  colaboradorId   Int           @unique @map("colaborador_id")
+  updatedAt       UpdatedAt?    @map("updated_at")
+
+  estadoUsuario   EstadoUsuario @relation(fields: [estadoUsuarioId], references: [id])
+  rol             Rol           @relation(fields: [rolId], references: [id])
+  colaborador     Colaborador   @relation(fields: [colaboradorId], references: [id])
+
+  ordenesCreadas   OrdenCompra[]       @relation("OrdenCreador")
+  ordenesAprobadas OrdenCompra[]       @relation("OrdenAprobador")
+  ingresos         MovimientoIngreso[]
+  salidas          MovimientoSalida[]
+  mermas           Merma[]
+
+  @@map("usuario")
+}
+
+model Proveedor {
+  id                Int         @id @default(autoincrement())
+  nombre            VarChar(100)
+  documento         VarChar(20)  @unique
+  descripcion       VarChar(100)?
+  correoElectronico VarChar(100)? @map("correo_electronico")
+  ciudad            VarChar(100)
+  direccion         VarChar(100)
+  telefono          VarChar(20)
+  updatedAt         UpdatedAt?  @map("updated_at")
+  lotes             Lote[]
+
+  @@map("proveedor")
+}
+
+model Cliente {
+  id                Int                @id @default(autoincrement())
+  nombre            VarChar(100)
+  documento         VarChar(20)         @unique
+  correoElectronico VarChar(100)?       @map("correo_electronico")
+  ciudad            VarChar(100)?
+  direccion         VarChar(100)?
+  telefono          VarChar(20)
+  tipoPersonaId     Int                @map("tipo_persona_id")
+  estadoClienteId   Int                @map("estado_cliente_id")
+  updatedAt         UpdatedAt?         @map("updated_at")
+
+  tipoPersona       TipoPersona        @relation(fields: [tipoPersonaId], references: [id])
+  estadoCliente     EstadoCliente      @relation(fields: [estadoClienteId], references: [id])
+  salidas           MovimientoSalida[]
+
+  @@map("cliente")
+}
+
+// ============================================================
+// PRODUCTO
+// ============================================================
+
+model Producto {
+  id                  Int                  @id @default(autoincrement())
+  nombre              VarChar(100)          @unique
+  descripcion         VarChar(100)
+  categoriaId         Int                  @map("categoria_id")
+  updatedAt           UpdatedAt?           @map("updated_at")
+
+  categoria           Categoria            @relation(fields: [categoriaId], references: [id])
+  detallesOrdenCompra DetalleOrdenCompra[]
+  lotesDetalle        LoteDetalle[]
+
+  @@map("producto")
+}
+
+// ============================================================
+// COMPRAS
+// ============================================================
+
+model OrdenCompra {
+  id                 Int                  @id @default(autoincrement())
+  numeroOrden        VarChar(50)           @unique @map("numero_orden")
+  asunto             VarChar(100)
+  createdAt          TimestampString      @default(now()) @map("created_at")
+  usuarioCreadorId   Int                  @map("usuario_creador_id")
+  usuarioAprobadorId Int?                 @map("usuario_aprobador_id")
+  estadoOrdenId      Int                  @map("estado_orden_id")
+
+  usuarioCreador     Usuario              @relation("OrdenCreador", fields: [usuarioCreadorId], references: [id])
+  usuarioAprobador   Usuario?             @relation("OrdenAprobador", fields: [usuarioAprobadorId], references: [id])
+  estadoOrden        EstadoOrden          @relation(fields: [estadoOrdenId], references: [id])
+
+  detalles           DetalleOrdenCompra[]
+  ingresos           MovimientoIngreso[]
+
+  @@index([estadoOrdenId])
+  @@index([usuarioCreadorId])
+  @@map("orden_compra")
+}
+
+model DetalleOrdenCompra {
+  id                 Int          @id @default(autoincrement())
+  ordenCompraId      Int          @map("orden_compra_id")
+  productoId         Int          @map("producto_id")
+  presentacionId     Int          @map("presentacion_id")
+  cantidadSolicitada Int          @map("cantidad_solicitada")
+
+  ordenCompra        OrdenCompra  @relation(fields: [ordenCompraId], references: [id])
+  producto           Producto     @relation(fields: [productoId], references: [id])
+  presentacion       Presentacion @relation(fields: [presentacionId], references: [id])
+
+  @@unique([ordenCompraId, productoId, presentacionId])
+  @@check(expression: sql`cantidad_solicitada > 0`, name: "chk_detalle_orden_cantidad_solicitada")
+  @@map("detalle_orden_compra")
+}
+
+// ============================================================
+// INVENTARIO CORE
+// ============================================================
+
+model Lote {
+  id             Int                @id @default(autoincrement())
+  proveedorId    Int                @map("proveedor_id")
+  costoTotalLote BigInt             @map("costo_total_lote")
+
+  proveedor      Proveedor          @relation(fields: [proveedorId], references: [id])
+  detalles       LoteDetalle[]
+  ingreso        MovimientoIngreso?
+
+  @@index([proveedorId])
+  @@map("lote")
+}
+
+model LoteDetalle {
+  id               Int           @id @default(autoincrement())
+  loteId           Int           @map("lote_id")
+  productoId       Int           @map("producto_id")
+  presentacionId   Int           @map("presentacion_id")
+  cantidadAceptada Int           @map("cantidad_aceptada")
+  aspectoVisualId  Int           @map("aspecto_visual_id")
+  estadoCalidadId  Int           @map("estado_calidad_id")
+  costoUnidad      Int           @map("costo_unidad")
+  costoTotal       BigInt        @map("costo_total")
+  fechaVencimiento DateString?   @map("fecha_vencimiento")
+
+  lote             Lote          @relation(fields: [loteId], references: [id])
+  producto         Producto      @relation(fields: [productoId], references: [id])
+  presentacion     Presentacion  @relation(fields: [presentacionId], references: [id])
+  aspectoVisual    AspectoVisual @relation(fields: [aspectoVisualId], references: [id])
+  estadoCalidad    EstadoCalidad @relation(fields: [estadoCalidadId], references: [id])
+
+  stock            StockActual?
+  salidas          SalidaDetalle[]
+  mermas           Merma[]
+
+  @@unique([loteId, productoId, presentacionId])
+  @@index([productoId, presentacionId, fechaVencimiento], map: "lote_detalle_prod_pres_venc_idx")
+  @@check(expression: sql`cantidad_aceptada > 0`, name: "chk_lote_detalle_cantidad_aceptada")
+  @@check(expression: sql`costo_unidad > 0`, name: "chk_lote_detalle_costo_unidad")
+  @@check(expression: sql`costo_total > 0`, name: "chk_lote_detalle_costo_total")
+  @@map("lote_detalle")
+}
+
+model StockActual {
+  id            Int         @id @default(autoincrement())
+  loteDetalleId Int         @unique @map("lote_detalle_id")
+  almacenId     Int         @map("almacen_id")
+  cantidad      Int
+  updatedAt     UpdatedAt?  @map("updated_at")
+
+  loteDetalle   LoteDetalle @relation(fields: [loteDetalleId], references: [id])
+  almacen       Almacen     @relation(fields: [almacenId], references: [id])
+
+  @@index([almacenId])
+  @@check(expression: sql`cantidad >= 0`, name: "chk_stock_actual_cantidad")
+  @@map("stock_actual")
+}
+
+// ============================================================
+// MOVIMIENTOS DE INGRESO
+// ============================================================
+
+model MovimientoIngreso {
+  id                 Int             @id @default(autoincrement())
+  ordenCompraId      Int             @map("orden_compra_id")
+  loteId             Int             @unique @map("lote_id")
+  createdAt          TimestampString @default(now()) @map("created_at")
+  fechaHoraRecepcion TimestampString @map("fecha_hora_recepcion")
+  observacion        VarChar(250)?
+  usuarioId          Int             @map("usuario_id")
+  almacenId          Int             @map("almacen_id")
+
+  ordenCompra        OrdenCompra     @relation(fields: [ordenCompraId], references: [id])
+  lote               Lote            @relation(fields: [loteId], references: [id])
+  usuario            Usuario         @relation(fields: [usuarioId], references: [id])
+  almacen            Almacen         @relation(fields: [almacenId], references: [id])
+
+  @@index([ordenCompraId])
+  @@index([fechaHoraRecepcion])
+  @@map("movimiento_ingreso")
+}
+
+// ============================================================
+// MOVIMIENTOS DE SALIDA
+// ============================================================
+
+model MovimientoSalida {
+  id              Int             @id @default(autoincrement())
+  valeManual      VarChar(50)      @unique @map("vale_manual")
+  createdAt       TimestampString @default(now()) @map("created_at")
+  fechaHoraSalida TimestampString @map("fecha_hora_salida")
+  observacion     VarChar(250)?
+  clienteId       Int             @map("cliente_id")
+  vendedorId      Int             @map("vendedor_id")
+  estadoSalidaId  Int             @map("estado_salida_id")
+  usuarioId       Int             @map("usuario_id")
+  almacenId       Int             @map("almacen_id")
+
+  cliente         Cliente         @relation(fields: [clienteId], references: [id])
+  vendedor        Colaborador     @relation("VendedorSalida", fields: [vendedorId], references: [id])
+  estadoSalida    EstadoSalida    @relation(fields: [estadoSalidaId], references: [id])
+  usuario         Usuario         @relation(fields: [usuarioId], references: [id])
+  almacen         Almacen         @relation(fields: [almacenId], references: [id])
+
+  detalles        SalidaDetalle[]
+
+  @@index([clienteId])
+  @@index([almacenId])
+  @@index([fechaHoraSalida])
+  @@map("movimiento_salida")
+}
+
+model SalidaDetalle {
+  id                 Int              @id @default(autoincrement())
+  movimientoSalidaId Int              @map("movimiento_salida_id")
+  loteDetalleId      Int              @map("lote_detalle_id")
+  cantidad           Int
+
+  movimientoSalida   MovimientoSalida @relation(fields: [movimientoSalidaId], references: [id])
+  loteDetalle        LoteDetalle      @relation(fields: [loteDetalleId], references: [id])
+
+  @@unique([movimientoSalidaId, loteDetalleId])
+  @@index([loteDetalleId])
+  @@check(expression: sql`cantidad > 0`, name: "chk_salida_detalle_cantidad")
+  @@map("salida_detalle")
+}
+
+// ============================================================
+// MERMA
+// ============================================================
+
+model Merma {
+  id            Int             @id @default(autoincrement())
+  loteDetalleId Int             @map("lote_detalle_id")
+  cantidad      Int
+  createdAt     TimestampString @default(now()) @map("created_at")
+  mermaTipoId   Int             @map("merma_tipo_id")
+  usuarioId     Int             @map("usuario_id")
+  observacion   VarChar(150)?
+
+  loteDetalle   LoteDetalle     @relation(fields: [loteDetalleId], references: [id])
+  mermaTipo     MermaTipo       @relation(fields: [mermaTipoId], references: [id])
+  usuario       Usuario         @relation(fields: [usuarioId], references: [id])
+
+  @@index([loteDetalleId])
+  @@index([createdAt])
+  @@check(expression: sql`cantidad > 0`, name: "chk_merma_cantidad")
+  @@map("merma")
+}
