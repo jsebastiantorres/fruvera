@@ -2,14 +2,25 @@
 import express from "express";
 
 // import controladores
-import { registrarUsuario } from "../controllers/autenticacion.controller.js";
+import {
+  registrarUsuario,
+  obtenerRoles,
+  obtenerEstados,
+} from "../controllers/autenticacion.controller.js";
 
 // import middleware
-import {validacionDatosRegistro} from "../middlewares/autenticacion.middleware.js"
+import { validacionDatosRegistro } from "../middlewares/autenticacion.middleware.js";
 const router = express.Router();
 
 // registrar usuario
 router.post("/registro", validacionDatosRegistro, registrarUsuario);
+
+// RUTAS SECUNDARIAS NECESARIAS
+// obtener roles
+router.get("/roles", obtenerRoles);
+
+// obtener estados de usuarios
+router.get("/estados", obtenerEstados);
 
 // registrar usuario
 // router.post("/login", iniciarSesion);

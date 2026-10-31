@@ -1,8 +1,7 @@
 // validacion de campos
 export const validacionDatosRegistro = (req, res, next) => {
   // parametros vacios
-  const { nombres, apellidos, documento, telefono, cargo, usuario, password } =
-    req.body;
+  const { nombres, apellidos, documento, telefono, cargo, usuario } = req.body;
 
   // array para hacer mas legible las verificaciones
   const campos = {
@@ -12,7 +11,6 @@ export const validacionDatosRegistro = (req, res, next) => {
     telefono,
     cargo,
     usuario,
-    password,
   };
 
   // expresiones regulares
@@ -34,12 +32,10 @@ export const validacionDatosRegistro = (req, res, next) => {
 
       // supera la longitud
       if (campo.length < 1 || campo.length > 30) {
-        return res
-          .status(400)
-          .json({
-            error: "Bad Request",
-            message: `La longitud de '${nombreCampo}' es incorrecta`,
-          });
+        return res.status(400).json({
+          error: "Bad Request",
+          message: `La longitud de '${nombreCampo}' es incorrecta`,
+        });
       }
     }
 
