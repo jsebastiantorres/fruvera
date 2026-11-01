@@ -2,6 +2,7 @@
 import {
   getAllRoles,
   getAllEstados,
+  getRolUsuario,
 } from "../repositories/atenticacion.repository.js";
 
 // Crear Usuario
@@ -11,12 +12,18 @@ export const registrarUsuario = async (req, res) => {
 
     const { nombres, apellidos, documento, telefono } = req.body;
 
+    // estado activo por default
     const estados = await getAllEstados();
     const estadoActivo = estados.find((e) => e.nombre === "activo");
     // console.log(estadoActivo.id);
 
+    // rol usuario por default
+    const rol = await getRolUsuario();
+    console.log(rol);
+
     console.log(
-      `nombres: ${nombres}, apellidos: ${apellidos}, documento: ${documento}, telefono: ${telefono}, estado: ${estadoActivo.id}`,
+      `nombres: ${nombres}, 
+      apellidos: ${apellidos}, documento: ${documento}, telefono: ${telefono}, estado: ${estadoActivo.id}, rol: ${[rol.id, rol.nombre]}`,
     );
 
     // Registro correto "demo"
@@ -27,6 +34,7 @@ export const registrarUsuario = async (req, res) => {
       documento: documento,
       telefono: telefono,
       estado: estadoActivo.id,
+      rol: rol.id,
     });
   } catch (error) {
     res.status(400).json({ message: "error en controlador" });

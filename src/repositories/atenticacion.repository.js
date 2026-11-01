@@ -5,11 +5,6 @@ import { db } from "../prisma/db.ts";
 
 // login
 
-// obtener roles
-export async function getAllRoles() {
-  return db.orm.public.Rol.select("id", "nombre", "descripcion").all();
-}
-
 // obtener estados
 export async function getAllEstados() {
   return db.orm.public.EstadoUsuario.select(
@@ -17,4 +12,16 @@ export async function getAllEstados() {
     "nombre",
     "descripcion",
   ).all();
+}
+
+// obtener roles
+export async function getAllRoles() {
+  return db.orm.public.Rol.select("id", "nombre", "descripcion").all();
+}
+
+// obtener rol usuario
+export async function getRolUsuario() {
+  return db.orm.public.Rol.select("id", "nombre")
+    .where({ nombre: "usuario" })
+    .first();
 }
