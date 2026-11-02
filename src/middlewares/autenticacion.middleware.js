@@ -16,7 +16,7 @@ export const validacionDatosRegistro = async (req, res, next) => {
     usuario,
   };
 
-  // expresiones regulares
+  // expresiones regulares de texto y numeros
   const regexInvalido = /[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/; // para texto
   const regexSoloNumeros = /^[0-9]+$/; // para numero
 
@@ -54,7 +54,7 @@ export const validacionDatosRegistro = async (req, res, next) => {
       }
 
       // supera la longitud
-      if (campo.length < 1 || campo.length > 30) {
+      if (campo.length < 2 || campo.length > 30) {
         return res.status(400).json({
           error: "Bad Request",
           message: `La longitud de '${nombreCampo}' es incorrecta`,
