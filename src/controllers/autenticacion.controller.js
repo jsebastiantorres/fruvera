@@ -1,8 +1,13 @@
+// import bcryptjs
+import bcrypt from "bcryptjs";
+
 // import de repository
 import {
   getAllRoles,
   getAllEstados,
   getRolUsuario,
+  createColaborador,
+  createUsuario,
 } from "../repositories/atenticacion.repository.js";
 
 // Crear Usuario
@@ -10,7 +15,22 @@ export const registrarUsuario = async (req, res) => {
   try {
     console.log("entrando al controlador");
 
-    const { nombres, apellidos, documento, telefono } = req.body;
+    const { nombres, apellidos, documento, telefono, usuario, password } =
+      req.body;
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    // crear el nuevo colaborador en tabla colaborador y retornar el id
+    // crear el colaborador
+    const nuevoColaborador = {
+      nombres: nombres,
+      apellidos: apellidos,
+      documento: documento,
+      telefono: telefono,
+    };
+
+    // obtener colaborador_id
+    const colaboradorCreado = await createColaborador(nuevoColaborador);
 
     // estado activo por default
     const estados = await getAllEstados();
@@ -21,23 +41,31 @@ export const registrarUsuario = async (req, res) => {
     const rol = await getRolUsuario();
     console.log(rol);
 
+    // log
     console.log(
-      `nombres: ${nombres}, 
-      apellidos: ${apellidos}, documento: ${documento}, telefono: ${telefono}, estado: ${estadoActivo.id}, rol: ${[rol.id, rol.nombre]}`,
+      `${colaboradorCreado.id}, estado: ${estadoActivo.id}, rol: ${[rol.id, rol.nombre]}`,
     );
+
+    // crear el nuevo usuario con usuario contraseña y id colaborador
+    const nuevoUsuario = {
+      usuario: usuario,
+      hashPassword: hashPassword,
+      estadoUsuarioId: estadoActivo.id,
+      rolId: rol.id,
+      colaboradorId: colaboradorCreado.id,
+    };
+
+    const usuarioCreado = await createUsuario(nuevoUsuario);
+
+    console.log(`usuarioCreado ${usuarioCreado}`);
 
     // Registro correto "demo"
     console.log("usuario registrado");
     res.status(200).json({
-      nombres: nombres,
-      apellidos: apellidos,
-      documento: documento,
-      telefono: telefono,
-      estado: estadoActivo.id,
-      rol: rol.id,
+      usuarioCreado,
     });
   } catch (error) {
-    res.status(400).json({ message: "error en controlador" });
+    res.status(400).json({ message: error.message });
   }
 };
 

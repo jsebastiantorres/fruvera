@@ -1,7 +1,11 @@
+// import de repository
+import { existUsuario } from "../repositories/atenticacion.repository.js";
+
 // validacion de campos
-export const validacionDatosRegistro = (req, res, next) => {
+export const validacionDatosRegistro = async (req, res, next) => {
   // parametros vacios
-  const { nombres, apellidos, documento, telefono, cargo, usuario } = req.body;
+  const { nombres, apellidos, documento, telefono, usuario, password } =
+    req.body;
 
   // array para hacer mas legible las verificaciones
   const campos = {
@@ -9,7 +13,6 @@ export const validacionDatosRegistro = (req, res, next) => {
     apellidos,
     documento,
     telefono,
-    cargo,
     usuario,
   };
 
@@ -19,6 +22,20 @@ export const validacionDatosRegistro = (req, res, next) => {
 
   try {
     console.log("entrando al try");
+
+    // validacion que exista la contraseña
+    if (!password) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: `El campo 'password' es obligatorio.`,
+      });
+    }
+
+    // verificar si el usuario ya existe en base de datos
+    const usuarioExiste = await existUsuario(usuario);
+    if (usuarioExiste) {
+      return res.status(409).json({ mensaje: "El usuario ya existe" });
+    }
 
     // validaciones generales
     for (const [nombreCampo, campo] of Object.entries(campos)) {

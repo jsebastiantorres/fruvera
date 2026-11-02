@@ -25,3 +25,18 @@ export async function getRolUsuario() {
     .where({ nombre: "usuario" })
     .first();
 }
+
+// crear el colaborador
+export async function createColaborador(objColaborador) {
+  return db.orm.public.Colaborador.create(objColaborador);
+}
+
+// crear el usuario
+export async function createUsuario(objUsuario) {
+  return db.orm.public.Usuario.create(objUsuario);
+}
+
+// verificar si el usuario existe
+export async function existUsuario(usuario) {
+  return db.orm.public.Usuario.where({ usuario: usuario }).first();
+}
