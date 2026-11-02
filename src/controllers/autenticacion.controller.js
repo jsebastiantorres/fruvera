@@ -8,6 +8,8 @@ import {
   getRolUsuario,
   createColaborador,
   createUsuario,
+  getUsuarioLogin,
+  resetPassword,
 } from "../repositories/atenticacion.repository.js";
 
 // Crear Usuario
@@ -95,9 +97,47 @@ export const obtenerEstados = async (req, res) => {
   }
 };
 
-// obtener estado x defecto para registro
+// INICIAR SESION
+export const inciarSesion = async (req, res) => {
+  console.log("iniciar sesion");
+  const { usuario, password } = req.body;
+  try {
+    // obtener usuario de db
+    const optenerUsuarioLogin = await getUsuarioLogin(usuario);
+    console.log("comparacion:");
+
+    // verificar password
+    const validacionDePassword = await bcrypt.compare(
+      password,
+      optenerUsuarioLogin.hashPassword,
+    );
+
+    console.log(`validacionDePassword ${validacionDePassword}`);
+
+    // validaciones password
+    if (!optenerUsuarioLogin || !validacionDePassword) {
+      return res.status(401).json({ error: "Caredenciales inválidas" });
+    }
+
+    res.status(200).json({ message: "bienvenido" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // configurar hash y codificado de las contraseñas
-// configurar el repository para guardar los usuarios [usuario, colaborador]
 
-// POSTGRESQL data para [rol, estado_usuario]
+// RESETEAR CONTRASEÑA (solo administradores)
+export const resetearPassword = async (req, res) => {
+  const { usuario, password } = req.body;
+
+  try {
+    const passwordHashed = await bcrypt.hash(password, 10);
+    const optenerUsuarioLogin = await resetPassword(usuario, passwordHashed);
+    if (optenerUsuarioLogin) {
+      res.status(200).json({ message: "contraseña reseteada" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

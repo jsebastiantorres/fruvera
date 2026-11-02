@@ -1,7 +1,14 @@
 // import de repository
-import { existUsuario, existDocumento } from "../repositories/atenticacion.repository.js";
+import {
+  existUsuario,
+  existDocumento,
+} from "../repositories/atenticacion.repository.js";
 
-// validacion de campos
+// expresiones regulares de texto y numeros
+const regexInvalido = /[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/; // para texto
+const regexSoloNumeros = /^[0-9]+$/; // para numero
+
+// validacion de registro
 export const validacionDatosRegistro = async (req, res, next) => {
   // parametros vacios
   const { nombres, apellidos, documento, telefono, usuario, password } =
@@ -15,10 +22,6 @@ export const validacionDatosRegistro = async (req, res, next) => {
     telefono,
     usuario,
   };
-
-  // expresiones regulares de texto y numeros
-  const regexInvalido = /[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/; // para texto
-  const regexSoloNumeros = /^[0-9]+$/; // para numero
 
   try {
     console.log("entrando al try");
@@ -34,7 +37,9 @@ export const validacionDatosRegistro = async (req, res, next) => {
     // verificar si ya existe un colaborador con el documento enviado en el form
     const documentoExiste = await existDocumento(documento);
     if (documentoExiste) {
-      return res.status(409).json({ mensaje: `Ya existe otro colaborador con el documento: ${documento}`  });
+      return res.status(409).json({
+        mensaje: `Ya existe otro colaborador con el documento: ${documento}`,
+      });
     }
 
     // verificar si el usuario ya existe en base de datos
@@ -91,6 +96,31 @@ export const validacionDatosRegistro = async (req, res, next) => {
         error: "Bad Request",
         message:
           "El telefono no es válido. No se permiten letras ni caracteres especiales.",
+      });
+    }
+    return next();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// validaciones de login
+export const validacionLogin = async (req, res, next) => {
+  const { usuario, password } = req.body;
+
+  try {
+    if (!usuario || !password) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: `los campos son abligatorios.`,
+      });
+    }
+
+    // verificacion longitud
+    if (usuario.length < 4 || usuario.length > 15) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: `Verificar el usuario e intenta nuevamente`,
       });
     }
     return next();

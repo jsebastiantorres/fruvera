@@ -1,10 +1,7 @@
 // importamos la database
 import { db } from "../prisma/db.ts";
 
-// registrar
-
-// login
-
+// REGISTRO
 // obtener estados
 export async function getAllEstados() {
   return db.orm.public.EstadoUsuario.select(
@@ -26,22 +23,34 @@ export async function getRolUsuario() {
     .first();
 }
 
-// crear el colaborador
+// CREAR el colaborador
 export async function createColaborador(objColaborador) {
   return db.orm.public.Colaborador.create(objColaborador);
 }
 
-// crear el usuario
+// CREAR el usuario
 export async function createUsuario(objUsuario) {
   return db.orm.public.Usuario.create(objUsuario);
 }
 
-// verificar si el usuario existe
+// VERIFICAR si el usuario existe
 export async function existUsuario(usuario) {
   return db.orm.public.Usuario.where({ usuario: usuario }).first();
 }
 
-// verificar si el documento existe
+// VERIFICAR si el documento existe
 export async function existDocumento(documento) {
   return db.orm.public.Colaborador.where({ documento: documento }).first();
+}
+
+// LOGIN
+// obtener usuario para el login
+export async function getUsuarioLogin(usuario) {
+  return db.orm.public.Usuario.where({ usuario: usuario }).first();
+}
+
+
+// resetear contraseña
+export async function resetPassword(usuario, password) {
+    return db.orm.public.Usuario.where({usuario: usuario}).update({ hashPassword: password });
 }
