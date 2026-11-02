@@ -40,3 +40,8 @@ export async function createUsuario(objUsuario) {
 export async function existUsuario(usuario) {
   return db.orm.public.Usuario.where({ usuario: usuario }).first();
 }
+
+// verificar si el documento existe
+export async function existDocumento(documento) {
+  return db.orm.public.Colaborador.where({ documento: documento }).first();
+}

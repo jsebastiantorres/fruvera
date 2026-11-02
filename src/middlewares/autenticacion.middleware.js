@@ -1,5 +1,5 @@
 // import de repository
-import { existUsuario } from "../repositories/atenticacion.repository.js";
+import { existUsuario, existDocumento } from "../repositories/atenticacion.repository.js";
 
 // validacion de campos
 export const validacionDatosRegistro = async (req, res, next) => {
@@ -23,12 +23,18 @@ export const validacionDatosRegistro = async (req, res, next) => {
   try {
     console.log("entrando al try");
 
-    // validacion que exista la contraseña
+    // validacion que en el form se envie la contraseña
     if (!password) {
       return res.status(400).json({
         error: "Bad Request",
         message: `El campo 'password' es obligatorio.`,
       });
+    }
+
+    // verificar si ya existe un colaborador con el documento enviado en el form
+    const documentoExiste = await existDocumento(documento);
+    if (documentoExiste) {
+      return res.status(409).json({ mensaje: `Ya existe otro colaborador con el documento: ${documento}`  });
     }
 
     // verificar si el usuario ya existe en base de datos
