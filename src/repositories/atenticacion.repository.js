@@ -44,13 +44,22 @@ export async function existDocumento(documento) {
 }
 
 // LOGIN
-// obtener usuario para el login
+// obtener usuario
 export async function getUsuarioLogin(usuario) {
   return db.orm.public.Usuario.where({ usuario: usuario }).first();
 }
 
-
+// FUNCIONES ADMINISTRADOR
 // resetear contraseña
 export async function resetPassword(usuario, password) {
-    return db.orm.public.Usuario.where({usuario: usuario}).update({ hashPassword: password });
+  return db.orm.public.Usuario.where({ usuario: usuario }).update({
+    hashPassword: password,
+  });
+}
+
+// cambiar estado
+export async function changeEstado(usuario, nuevoEstado) {
+  return db.orm.public.Usuario.where({ usuario: usuario }).update({
+    estadoUsuarioId: nuevoEstado,
+  });
 }

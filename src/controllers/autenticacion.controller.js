@@ -10,6 +10,7 @@ import {
   createUsuario,
   getUsuarioLogin,
   resetPassword,
+  changeEstado,
 } from "../repositories/atenticacion.repository.js";
 
 // Crear Usuario
@@ -103,19 +104,25 @@ export const inciarSesion = async (req, res) => {
   const { usuario, password } = req.body;
   try {
     // obtener usuario de db
-    const optenerUsuarioLogin = await getUsuarioLogin(usuario);
+    const obtenerUsuarioLogin = await getUsuarioLogin(usuario);
     console.log("comparacion:");
+
+    if (!obtenerUsuarioLogin || obtenerUsuarioLogin.estadoUsuarioId != 1) {
+      return res
+        .status(401)
+        .json({ message: "no se encuentra el usuario o esta inactivo" });
+    }
 
     // verificar password
     const validacionDePassword = await bcrypt.compare(
       password,
-      optenerUsuarioLogin.hashPassword,
+      obtenerUsuarioLogin.hashPassword,
     );
 
     console.log(`validacionDePassword ${validacionDePassword}`);
 
     // validaciones password
-    if (!optenerUsuarioLogin || !validacionDePassword) {
+    if (!obtenerUsuarioLogin || !validacionDePassword) {
       return res.status(401).json({ error: "Caredenciales inválidas" });
     }
 
@@ -133,9 +140,50 @@ export const resetearPassword = async (req, res) => {
 
   try {
     const passwordHashed = await bcrypt.hash(password, 10);
-    const optenerUsuarioLogin = await resetPassword(usuario, passwordHashed);
-    if (optenerUsuarioLogin) {
-      res.status(200).json({ message: "contraseña reseteada" });
+    const obtenerUsuarioLogin = await resetPassword(usuario, passwordHashed);
+
+    if (!obtenerUsuarioLogin || obtenerUsuarioLogin.estadoUsuarioId != 1) {
+      return res
+        .status(401)
+        .json({ message: "no se encuentra el usuario o esta inactivo" });
+    }
+    res.status(200).json({ message: "contraseña reseteada" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// CAMBIAR ESTADO (solo administradores)
+export const cambiarEstado = async (req, res) => {
+  const { usuario } = req.body;
+  try {
+    console.log(usuario);
+    // buscar y actualizar el estado del usuario
+    const obtenerUsuario = await getUsuarioLogin(usuario);
+    console.log(obtenerUsuario);
+
+    if (!obtenerUsuario) {
+      return res.status(401).json({ message: "no se encuentra el usuario" });
+    }
+
+    // de activo a inactivo
+    if (obtenerUsuario.estadoUsuarioId == 1) {
+      let nuevoEstado = 2;
+      const actualizarEstado = await changeEstado(
+        obtenerUsuario.usuario,
+        nuevoEstado,
+      );
+      return res.status(200).json({ message: "se ha 'inactivado' el usuario" });
+    }
+
+    // de inactivo a activo
+    if (obtenerUsuario.estadoUsuarioId == 2) {
+      let nuevoEstado = 1;
+      const actualizarEstado = await changeEstado(
+        obtenerUsuario.usuario,
+        nuevoEstado,
+      );
+      return res.status(200).json({ message: "se ha 'activado' el usuario" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });

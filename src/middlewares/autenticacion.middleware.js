@@ -128,3 +128,21 @@ export const validacionLogin = async (req, res, next) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// validacion de usuario
+export const validacionUsuario = async (req, res, next) => {
+  const usuario = req.body;
+
+  try {
+    if (!usuario) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: `los campos son abligatorios.`,
+      });
+    }
+
+    return next();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
