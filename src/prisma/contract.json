@@ -48,6 +48,10 @@
       "model": "EstadoUsuario",
       "namespace": "public"
     },
+    "historial_sesion": {
+      "model": "HistorialSesion",
+      "namespace": "public"
+    },
     "lote": {
       "model": "Lote",
       "namespace": "public"
@@ -94,6 +98,10 @@
     },
     "salida_detalle": {
       "model": "SalidaDetalle",
+      "namespace": "public"
+    },
+    "session": {
+      "model": "Session",
       "namespace": "public"
     },
     "stock_actual": {
@@ -1037,6 +1045,87 @@
               },
               "namespaceId": "public",
               "table": "estado_usuario"
+            }
+          },
+          "HistorialSesion": {
+            "fields": {
+              "fin": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "inicio": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "ip": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 45
+                  }
+                }
+              },
+              "usuarioId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "usuario": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "usuarioId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Usuario",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "fin": {
+                  "column": "fin"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "inicio": {
+                  "column": "inicio"
+                },
+                "ip": {
+                  "column": "ip"
+                },
+                "usuarioId": {
+                  "column": "usuario_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "historial_sesion"
             }
           },
           "Lote": {
@@ -2577,6 +2666,50 @@
               "table": "salida_detalle"
             }
           },
+          "Session": {
+            "fields": {
+              "expire": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-string@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 6
+                  }
+                }
+              },
+              "sess": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/json@1",
+                  "kind": "scalar"
+                }
+              },
+              "sid": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "expire": {
+                  "column": "expire"
+                },
+                "sess": {
+                  "column": "sess"
+                },
+                "sid": {
+                  "column": "sid"
+                }
+              },
+              "namespaceId": "public",
+              "table": "session"
+            }
+          },
           "StockActual": {
             "fields": {
               "almacenId": {
@@ -3646,6 +3779,90 @@
                   ]
                 }
               ]
+            },
+            "historial_sesion": {
+              "checks": [
+                {
+                  "expression": "fin IS NULL OR fin >= inicio",
+                  "name": "chk_historial_sesion_fin_d970e9f8",
+                  "prefix": "chk_historial_sesion_fin"
+                }
+              ],
+              "columns": {
+                "fin": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "inicio": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "ip": {
+                  "codecId": "sql/varchar@1",
+                  "dataType": "pg/varchar",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 45
+                  }
+                },
+                "usuario_id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "idx_historial_sesion_usuario"
+                  },
+                  "source": {
+                    "columns": [
+                      "usuario_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "historial_sesion"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuario"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "usuario_id",
+                    "inicio"
+                  ],
+                  "name": "idx_historial_sesion_usuario",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             },
             "lote": {
               "columns": {
@@ -5063,6 +5280,44 @@
                 }
               ]
             },
+            "session": {
+              "columns": {
+                "expire": {
+                  "codecId": "pg/timestamp-string@1",
+                  "dataType": "pg/timestamp",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 6
+                  }
+                },
+                "sess": {
+                  "codecId": "pg/json@1",
+                  "dataType": "pg/json",
+                  "nullable": false
+                },
+                "sid": {
+                  "codecId": "sql/varchar@1",
+                  "dataType": "pg/varchar",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [
+                {
+                  "columns": [
+                    "expire"
+                  ],
+                  "name": "IDX_session_expire",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "sid"
+                ]
+              },
+              "uniques": []
+            },
             "stock_actual": {
               "checks": [
                 {
@@ -5361,7 +5616,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "c595706e2e2f1a486072e920332bbb968077d316dc68bf2eec5f940fa5cbd327"
+    "storageHash": "49b17cc0c03f7c3a1949163887562c42354d58c91e342fc0638fa2cd316a7626"
   },
   "execution": {
     "executionHash": "e2b1c407f418d4be9430cff7173426e972854d5830ca091253ed3537fb23aed7",

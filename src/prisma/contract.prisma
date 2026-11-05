@@ -397,3 +397,31 @@ model Merma {
   @@check(expression: sql`cantidad > 0`, name: "chk_merma_cantidad")
   @@map("merma")
 }
+
+// ============================================================
+// SESIONES
+// ============================================================
+// Tabla del store de sesiones de Express (connect-pg-simple).
+// Sin relaciones: la librería la lee y escribe por su cuenta.
+model Session {
+  sid    VarChar            @id
+  sess   Json
+  expire TimestampString(6)
+
+  @@index([expire], map: "IDX_session_expire")
+  @@map("session")
+}
+
+model HistorialSesion {
+  id        Int                @id @default(autoincrement())
+  usuarioId Int                @map("usuario_id")
+  inicio    TimestamptzString  @default(now())
+  fin       TimestamptzString?
+  ip        VarChar(45)?
+
+  usuario   Usuario            @relation(fields: [usuarioId], references: [id], index: "idx_historial_sesion_usuario")
+
+  @@index([usuarioId, inicio], map: "idx_historial_sesion_usuario")
+  @@check(expression: sql`fin IS NULL OR fin >= inicio`, name: "chk_historial_sesion_fin")
+  @@map("historial_sesion")
+}

@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'c595706e2e2f1a486072e920332bbb968077d316dc68bf2eec5f940fa5cbd327'>;
+  StorageHashBase<'49b17cc0c03f7c3a1949163887562c42354d58c91e342fc0638fa2cd316a7626'>;
 export type ExecutionHash =
   ExecutionHashBase<'e2b1c407f418d4be9430cff7173426e972854d5830ca091253ed3537fb23aed7'>;
 export type ProfileHash =
@@ -397,6 +397,15 @@ export namespace Models {
     usuarios: public_Usuario[];
     readonly [RelationKeys]?: 'usuarios';
   };
+  export type public_HistorialSesion = {
+    fin: FieldOutputTypes['public']['HistorialSesion']['fin'];
+    id: FieldOutputTypes['public']['HistorialSesion']['id'];
+    inicio: FieldOutputTypes['public']['HistorialSesion']['inicio'];
+    ip: FieldOutputTypes['public']['HistorialSesion']['ip'];
+    usuarioId: FieldOutputTypes['public']['HistorialSesion']['usuarioId'];
+    usuario: public_Usuario;
+    readonly [RelationKeys]?: 'usuario';
+  };
   export type public_Lote = {
     costoTotalLote: FieldOutputTypes['public']['Lote']['costoTotalLote'];
     id: FieldOutputTypes['public']['Lote']['id'];
@@ -554,6 +563,12 @@ export namespace Models {
     movimientoSalida: public_MovimientoSalida;
     readonly [RelationKeys]?: 'loteDetalle' | 'movimientoSalida';
   };
+  export type public_Session = {
+    expire: FieldOutputTypes['public']['Session']['expire'];
+    sess: FieldOutputTypes['public']['Session']['sess'];
+    sid: FieldOutputTypes['public']['Session']['sid'];
+    readonly [RelationKeys]?: never;
+  };
   export type public_StockActual = {
     almacenId: FieldOutputTypes['public']['StockActual']['almacenId'];
     cantidad: FieldOutputTypes['public']['StockActual']['cantidad'];
@@ -612,6 +627,7 @@ export declare const models: {
     EstadoOrden: Models.public_EstadoOrden;
     EstadoSalida: Models.public_EstadoSalida;
     EstadoUsuario: Models.public_EstadoUsuario;
+    HistorialSesion: Models.public_HistorialSesion;
     Lote: Models.public_Lote;
     LoteDetalle: Models.public_LoteDetalle;
     Merma: Models.public_Merma;
@@ -624,6 +640,7 @@ export declare const models: {
     Proveedor: Models.public_Proveedor;
     Rol: Models.public_Rol;
     SalidaDetalle: Models.public_SalidaDetalle;
+    Session: Models.public_Session;
     StockActual: Models.public_StockActual;
     TipoPersona: Models.public_TipoPersona;
     Usuario: Models.public_Usuario;
@@ -1170,6 +1187,69 @@ type ContractBase = Omit<
               uniques: readonly [{ readonly columns: readonly ['nombre'] }];
               indexes: readonly [];
               foreignKeys: readonly [];
+            };
+            readonly historial_sesion: {
+              columns: {
+                readonly fin: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                  readonly many: false;
+                };
+                readonly inicio: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly many: false;
+                };
+                readonly ip: {
+                  readonly dataType: 'pg/varchar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 45 };
+                  readonly many: false;
+                };
+                readonly usuario_id: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'idx_historial_sesion_usuario';
+                  readonly columns: readonly ['usuario_id', 'inicio'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'historial_sesion';
+                    readonly columns: readonly ['usuario_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'usuario';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
             };
             readonly lote: {
               columns: {
@@ -2245,6 +2325,39 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly session: {
+              columns: {
+                readonly expire: {
+                  readonly dataType: 'pg/timestamp';
+                  readonly codecId: 'pg/timestamp-string@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 6 };
+                  readonly many: false;
+                };
+                readonly sess: {
+                  readonly dataType: 'pg/json';
+                  readonly codecId: 'pg/json@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly sid: {
+                  readonly dataType: 'pg/varchar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['sid'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'IDX_session_expire';
+                  readonly columns: readonly ['expire'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [];
+            };
             readonly stock_actual: {
               columns: {
                 readonly almacen_id: {
@@ -2506,6 +2619,10 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'EstadoUsuario';
     };
+    readonly historial_sesion: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'HistorialSesion';
+    };
     readonly lote: { readonly namespace: 'public' & NamespaceId; readonly model: 'Lote' };
     readonly lote_detalle: {
       readonly namespace: 'public' & NamespaceId;
@@ -2539,6 +2656,7 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'SalidaDetalle';
     };
+    readonly session: { readonly namespace: 'public' & NamespaceId; readonly model: 'Session' };
     readonly stock_actual: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'StockActual';
@@ -3213,6 +3331,65 @@ type ContractBase = Omit<
                 readonly descripcion: { readonly column: 'descripcion' };
                 readonly id: { readonly column: 'id' };
                 readonly nombre: { readonly column: 'nombre' };
+              };
+            };
+          };
+          readonly HistorialSesion: {
+            readonly fields: {
+              readonly fin: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly inicio: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly ip: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 45 };
+                };
+              };
+              readonly usuarioId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly usuario: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Usuario';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['usuarioId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'historial_sesion';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly fin: { readonly column: 'fin' };
+                readonly id: { readonly column: 'id' };
+                readonly inicio: { readonly column: 'inicio' };
+                readonly ip: { readonly column: 'ip' };
+                readonly usuarioId: { readonly column: 'usuario_id' };
               };
             };
           };
@@ -4271,6 +4448,36 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly loteDetalleId: { readonly column: 'lote_detalle_id' };
                 readonly movimientoSalidaId: { readonly column: 'movimiento_salida_id' };
+              };
+            };
+          };
+          readonly Session: {
+            readonly fields: {
+              readonly expire: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamp-string@1';
+                  readonly typeParams: { readonly precision: 6 };
+                };
+              };
+              readonly sess: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/json@1' };
+              };
+              readonly sid: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'sql/varchar@1' };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly table: 'session';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly expire: { readonly column: 'expire' };
+                readonly sess: { readonly column: 'sess' };
+                readonly sid: { readonly column: 'sid' };
               };
             };
           };
