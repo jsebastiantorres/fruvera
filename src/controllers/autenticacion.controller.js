@@ -80,7 +80,7 @@ export const obtenerRoles = async (req, res) => {
     const roles = await getAllRoles();
     console.log(roles);
 
-    res.status(200).json({ Message: "Roles", roles: roles });
+    res.status(200).json({ message: "Roles", roles: roles });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -139,14 +139,18 @@ export const resetearPassword = async (req, res) => {
   const { usuario, password } = req.body;
 
   try {
-    const passwordHashed = await bcrypt.hash(password, 10);
-    const obtenerUsuarioLogin = await resetPassword(usuario, passwordHashed);
+    const obtenerUsuario = await getUsuarioLogin(usuario);
+    console.log(obtenerUsuario);
 
-    if (!obtenerUsuarioLogin || obtenerUsuarioLogin.estadoUsuarioId != 1) {
+    if (!obtenerUsuario || obtenerUsuario.estadoUsuarioId != 1) {
       return res
         .status(401)
         .json({ message: "no se encuentra el usuario o esta inactivo" });
     }
+
+    const passwordHashed = await bcrypt.hash(password, 10);
+    const reseteoPassword = await resetPassword(usuario, passwordHashed);
+
     res.status(200).json({ message: "contraseña reseteada" });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -156,6 +160,7 @@ export const resetearPassword = async (req, res) => {
 // CAMBIAR ESTADO (solo administradores)
 export const cambiarEstado = async (req, res) => {
   const { usuario } = req.body;
+
   try {
     console.log(usuario);
     // buscar y actualizar el estado del usuario
@@ -164,6 +169,10 @@ export const cambiarEstado = async (req, res) => {
 
     if (!obtenerUsuario) {
       return res.status(401).json({ message: "no se encuentra el usuario" });
+    }
+
+    if (obtenerUsuario.rolId === 1) {
+      return res.status(401).json({ message: "no autorizado" });
     }
 
     // de activo a inactivo

@@ -1,0 +1,629 @@
+[
+  {
+    "id": "alterType.cliente.updated_at",
+    "label": "Alter type of \"cliente\".\"updated_at\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "updated_at",
+        "table": "cliente"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"updated_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cliente",
+          "updated_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"updated_at\" on \"cliente\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"updated_at\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"cliente\" ALTER COLUMN \"updated_at\" TYPE timestamptz USING \"updated_at\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "cliente",
+            "column": "updated_at",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"updated_at\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "cliente",
+          "updated_at",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.merma.created_at",
+    "label": "Alter type of \"merma\".\"created_at\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "created_at",
+        "table": "merma"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"created_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "merma",
+          "created_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"created_at\" on \"merma\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"created_at\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"merma\" ALTER COLUMN \"created_at\" TYPE timestamptz USING \"created_at\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "merma",
+            "column": "created_at",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"created_at\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "merma",
+          "created_at",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.movimiento_ingreso.created_at",
+    "label": "Alter type of \"movimiento_ingreso\".\"created_at\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "created_at",
+        "table": "movimiento_ingreso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"created_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "movimiento_ingreso",
+          "created_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"created_at\" on \"movimiento_ingreso\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"created_at\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"movimiento_ingreso\" ALTER COLUMN \"created_at\" TYPE timestamptz USING \"created_at\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "movimiento_ingreso",
+            "column": "created_at",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"created_at\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "movimiento_ingreso",
+          "created_at",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.movimiento_ingreso.fecha_hora_recepcion",
+    "label": "Alter type of \"movimiento_ingreso\".\"fecha_hora_recepcion\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_hora_recepcion",
+        "table": "movimiento_ingreso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_hora_recepcion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "movimiento_ingreso",
+          "fecha_hora_recepcion"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"fecha_hora_recepcion\" on \"movimiento_ingreso\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"fecha_hora_recepcion\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"movimiento_ingreso\" ALTER COLUMN \"fecha_hora_recepcion\" TYPE timestamptz USING \"fecha_hora_recepcion\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "movimiento_ingreso",
+            "column": "fecha_hora_recepcion",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_hora_recepcion\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "movimiento_ingreso",
+          "fecha_hora_recepcion",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.movimiento_salida.created_at",
+    "label": "Alter type of \"movimiento_salida\".\"created_at\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "created_at",
+        "table": "movimiento_salida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"created_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "movimiento_salida",
+          "created_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"created_at\" on \"movimiento_salida\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"created_at\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"movimiento_salida\" ALTER COLUMN \"created_at\" TYPE timestamptz USING \"created_at\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "movimiento_salida",
+            "column": "created_at",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"created_at\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "movimiento_salida",
+          "created_at",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.movimiento_salida.fecha_hora_salida",
+    "label": "Alter type of \"movimiento_salida\".\"fecha_hora_salida\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_hora_salida",
+        "table": "movimiento_salida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_hora_salida\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "movimiento_salida",
+          "fecha_hora_salida"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"fecha_hora_salida\" on \"movimiento_salida\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"fecha_hora_salida\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"movimiento_salida\" ALTER COLUMN \"fecha_hora_salida\" TYPE timestamptz USING \"fecha_hora_salida\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "movimiento_salida",
+            "column": "fecha_hora_salida",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_hora_salida\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "movimiento_salida",
+          "fecha_hora_salida",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.orden_compra.created_at",
+    "label": "Alter type of \"orden_compra\".\"created_at\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "created_at",
+        "table": "orden_compra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"created_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "orden_compra",
+          "created_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"created_at\" on \"orden_compra\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"created_at\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"orden_compra\" ALTER COLUMN \"created_at\" TYPE timestamptz USING \"created_at\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "orden_compra",
+            "column": "created_at",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"created_at\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "orden_compra",
+          "created_at",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.producto.updated_at",
+    "label": "Alter type of \"producto\".\"updated_at\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "updated_at",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"updated_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "updated_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"updated_at\" on \"producto\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"updated_at\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"producto\" ALTER COLUMN \"updated_at\" TYPE timestamptz USING \"updated_at\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "producto",
+            "column": "updated_at",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"updated_at\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "updated_at",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.proveedor.updated_at",
+    "label": "Alter type of \"proveedor\".\"updated_at\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "updated_at",
+        "table": "proveedor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"updated_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "proveedor",
+          "updated_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"updated_at\" on \"proveedor\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"updated_at\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"proveedor\" ALTER COLUMN \"updated_at\" TYPE timestamptz USING \"updated_at\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "proveedor",
+            "column": "updated_at",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"updated_at\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "proveedor",
+          "updated_at",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.stock_actual.updated_at",
+    "label": "Alter type of \"stock_actual\".\"updated_at\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "updated_at",
+        "table": "stock_actual"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"updated_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "stock_actual",
+          "updated_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"updated_at\" on \"stock_actual\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"updated_at\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"stock_actual\" ALTER COLUMN \"updated_at\" TYPE timestamptz USING \"updated_at\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "stock_actual",
+            "column": "updated_at",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"updated_at\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "stock_actual",
+          "updated_at",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  },
+  {
+    "id": "alterType.usuario.updated_at",
+    "label": "Alter type of \"usuario\".\"updated_at\" to timestamptz",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "updated_at",
+        "table": "usuario"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"updated_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "usuario",
+          "updated_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"updated_at\" on \"usuario\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "alter type of \"updated_at\" to timestamptz",
+        "sql": "ALTER TABLE \"public\".\"usuario\" ALTER COLUMN \"updated_at\" TYPE timestamptz USING \"updated_at\" AT TIME ZONE 'America/Bogota'",
+        "meta": {
+          "convertedColumn": {
+            "table": "usuario",
+            "column": "updated_at",
+            "by": "conversion"
+          }
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"updated_at\" has type \"timestamp with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "usuario",
+          "updated_at",
+          "timestamp with time zone"
+        ]
+      }
+    ],
+    "meta": {
+      "warning": "TABLE_REWRITE"
+    }
+  }
+]

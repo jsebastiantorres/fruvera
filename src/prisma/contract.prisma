@@ -3,16 +3,15 @@
 // Tipos con nombre reutilizables.
 // TimestampString = columna `timestamp` que el código recibe como string (no requiere Temporal).
 types {
-  UpdatedAt = TimestampString @onCreate(now()) @onUpdate(now())
+  UpdatedAt = TimestamptzString @onCreate(now()) @onUpdate(now())
 }
 
 // ============================================================
 // CATÁLOGOS
 // ============================================================
-
 model EstadoUsuario {
-  id          Int        @id @default(autoincrement())
-  nombre      VarChar(30) @unique
+  id          Int          @id @default(autoincrement())
+  nombre      VarChar(30)  @unique
   descripcion VarChar(255)
   usuarios    Usuario[]
 
@@ -20,8 +19,8 @@ model EstadoUsuario {
 }
 
 model Rol {
-  id          Int        @id @default(autoincrement())
-  nombre      VarChar(30) @unique
+  id          Int          @id @default(autoincrement())
+  nombre      VarChar(30)  @unique
   descripcion VarChar(255)
   usuarios    Usuario[]
 
@@ -30,7 +29,7 @@ model Rol {
 
 model EstadoOrden {
   id          Int           @id @default(autoincrement())
-  nombre      VarChar(30)    @unique
+  nombre      VarChar(30)   @unique
   descripcion VarChar(255)
   ordenes     OrdenCompra[]
 
@@ -39,7 +38,7 @@ model EstadoOrden {
 
 model EstadoSalida {
   id          Int                @id @default(autoincrement())
-  nombre      VarChar(30)         @unique
+  nombre      VarChar(30)        @unique
   descripcion VarChar(255)
   salidas     MovimientoSalida[]
 
@@ -47,8 +46,8 @@ model EstadoSalida {
 }
 
 model EstadoCliente {
-  id          Int       @id @default(autoincrement())
-  nombre      VarChar(30) @unique
+  id          Int          @id @default(autoincrement())
+  nombre      VarChar(30)  @unique
   descripcion VarChar(255)
   clientes    Cliente[]
 
@@ -56,8 +55,8 @@ model EstadoCliente {
 }
 
 model TipoPersona {
-  id          Int       @id @default(autoincrement())
-  nombre      VarChar(30) @unique
+  id          Int          @id @default(autoincrement())
+  nombre      VarChar(30)  @unique
   descripcion VarChar(100)
   clientes    Cliente[]
 
@@ -65,8 +64,8 @@ model TipoPersona {
 }
 
 model Categoria {
-  id          Int        @id @default(autoincrement())
-  nombre      VarChar(30) @unique
+  id          Int          @id @default(autoincrement())
+  nombre      VarChar(30)  @unique
   descripcion VarChar(100)
   productos   Producto[]
 
@@ -75,7 +74,7 @@ model Categoria {
 
 model Presentacion {
   id                  Int                  @id @default(autoincrement())
-  nombre              VarChar(30)           @unique
+  nombre              VarChar(30)          @unique
   descripcion         VarChar(100)
   detallesOrdenCompra DetalleOrdenCompra[]
   lotesDetalle        LoteDetalle[]
@@ -85,7 +84,7 @@ model Presentacion {
 
 model EstadoCalidad {
   id           Int           @id @default(autoincrement())
-  nombre       VarChar(30)    @unique
+  nombre       VarChar(30)   @unique
   descripcion  VarChar(100)
   lotesDetalle LoteDetalle[]
 
@@ -94,7 +93,7 @@ model EstadoCalidad {
 
 model AspectoVisual {
   id           Int           @id @default(autoincrement())
-  nombre       VarChar(30)    @unique
+  nombre       VarChar(30)   @unique
   descripcion  VarChar(100)
   lotesDetalle LoteDetalle[]
 
@@ -102,8 +101,8 @@ model AspectoVisual {
 }
 
 model MermaTipo {
-  id          Int        @id @default(autoincrement())
-  nombre      VarChar(50) @unique
+  id          Int          @id @default(autoincrement())
+  nombre      VarChar(50)  @unique
   descripcion VarChar(150)
   mermas      Merma[]
 
@@ -112,7 +111,7 @@ model MermaTipo {
 
 model Almacen {
   id          Int                 @id @default(autoincrement())
-  nombre      VarChar(30)          @unique
+  nombre      VarChar(30)         @unique
   descripcion VarChar(255)
   stocks      StockActual[]
   ingresos    MovimientoIngreso[]
@@ -124,13 +123,12 @@ model Almacen {
 // ============================================================
 // PERSONAS
 // ============================================================
-
 model Colaborador {
   id             Int                @id @default(autoincrement())
   nombres        VarChar(100)
   apellidos      VarChar(100)
-  documento      VarChar(20)         @unique
-  telefono       VarChar(20)         @unique
+  documento      VarChar(20)        @unique
+  telefono       VarChar(20)        @unique
   usuario        Usuario?
   ventasComoVend MovimientoSalida[] @relation("VendedorSalida")
 
@@ -138,17 +136,17 @@ model Colaborador {
 }
 
 model Usuario {
-  id              Int           @id @default(autoincrement())
-  usuario         VarChar(20)    @unique
-  hashPassword    VarChar(255)   @map("hash_password")
-  estadoUsuarioId Int           @map("estado_usuario_id")
-  rolId           Int           @map("rol_id")
-  colaboradorId   Int           @unique @map("colaborador_id")
-  updatedAt       UpdatedAt?    @map("updated_at")
+  id               Int                 @id @default(autoincrement())
+  usuario          VarChar(20)         @unique
+  hashPassword     VarChar(255)        @map("hash_password")
+  estadoUsuarioId  Int                 @map("estado_usuario_id")
+  rolId            Int                 @map("rol_id")
+  colaboradorId    Int                 @unique @map("colaborador_id")
+  updatedAt        UpdatedAt?          @map("updated_at")
 
-  estadoUsuario   EstadoUsuario @relation(fields: [estadoUsuarioId], references: [id])
-  rol             Rol           @relation(fields: [rolId], references: [id])
-  colaborador     Colaborador   @relation(fields: [colaboradorId], references: [id])
+  estadoUsuario    EstadoUsuario       @relation(fields: [estadoUsuarioId], references: [id])
+  rol              Rol                 @relation(fields: [rolId], references: [id])
+  colaborador      Colaborador         @relation(fields: [colaboradorId], references: [id])
 
   ordenesCreadas   OrdenCompra[]       @relation("OrdenCreador")
   ordenesAprobadas OrdenCompra[]       @relation("OrdenAprobador")
@@ -160,15 +158,15 @@ model Usuario {
 }
 
 model Proveedor {
-  id                Int         @id @default(autoincrement())
+  id                Int           @id @default(autoincrement())
   nombre            VarChar(100)
-  documento         VarChar(20)  @unique
+  documento         VarChar(20)   @unique
   descripcion       VarChar(100)?
   correoElectronico VarChar(100)? @map("correo_electronico")
   ciudad            VarChar(100)
   direccion         VarChar(100)
   telefono          VarChar(20)
-  updatedAt         UpdatedAt?  @map("updated_at")
+  updatedAt         UpdatedAt?    @map("updated_at")
   lotes             Lote[]
 
   @@map("proveedor")
@@ -177,8 +175,8 @@ model Proveedor {
 model Cliente {
   id                Int                @id @default(autoincrement())
   nombre            VarChar(100)
-  documento         VarChar(20)         @unique
-  correoElectronico VarChar(100)?       @map("correo_electronico")
+  documento         VarChar(20)        @unique
+  correoElectronico VarChar(100)?      @map("correo_electronico")
   ciudad            VarChar(100)?
   direccion         VarChar(100)?
   telefono          VarChar(20)
@@ -196,10 +194,9 @@ model Cliente {
 // ============================================================
 // PRODUCTO
 // ============================================================
-
 model Producto {
   id                  Int                  @id @default(autoincrement())
-  nombre              VarChar(100)          @unique
+  nombre              VarChar(100)         @unique
   descripcion         VarChar(100)
   categoriaId         Int                  @map("categoria_id")
   updatedAt           UpdatedAt?           @map("updated_at")
@@ -214,12 +211,11 @@ model Producto {
 // ============================================================
 // COMPRAS
 // ============================================================
-
 model OrdenCompra {
   id                 Int                  @id @default(autoincrement())
-  numeroOrden        VarChar(50)           @unique @map("numero_orden")
+  numeroOrden        VarChar(50)          @unique @map("numero_orden")
   asunto             VarChar(100)
-  createdAt          TimestampString      @default(now()) @map("created_at")
+  createdAt          TimestamptzString    @default(now()) @map("created_at")
   usuarioCreadorId   Int                  @map("usuario_creador_id")
   usuarioAprobadorId Int?                 @map("usuario_aprobador_id")
   estadoOrdenId      Int                  @map("estado_orden_id")
@@ -255,7 +251,6 @@ model DetalleOrdenCompra {
 // ============================================================
 // INVENTARIO CORE
 // ============================================================
-
 model Lote {
   id             Int                @id @default(autoincrement())
   proveedorId    Int                @map("proveedor_id")
@@ -270,22 +265,22 @@ model Lote {
 }
 
 model LoteDetalle {
-  id               Int           @id @default(autoincrement())
-  loteId           Int           @map("lote_id")
-  productoId       Int           @map("producto_id")
-  presentacionId   Int           @map("presentacion_id")
-  cantidadAceptada Int           @map("cantidad_aceptada")
-  aspectoVisualId  Int           @map("aspecto_visual_id")
-  estadoCalidadId  Int           @map("estado_calidad_id")
-  costoUnidad      Int           @map("costo_unidad")
-  costoTotal       BigInt        @map("costo_total")
-  fechaVencimiento DateString?   @map("fecha_vencimiento")
+  id               Int             @id @default(autoincrement())
+  loteId           Int             @map("lote_id")
+  productoId       Int             @map("producto_id")
+  presentacionId   Int             @map("presentacion_id")
+  cantidadAceptada Int             @map("cantidad_aceptada")
+  aspectoVisualId  Int             @map("aspecto_visual_id")
+  estadoCalidadId  Int             @map("estado_calidad_id")
+  costoUnidad      Int             @map("costo_unidad")
+  costoTotal       BigInt          @map("costo_total")
+  fechaVencimiento DateString?     @map("fecha_vencimiento")
 
-  lote             Lote          @relation(fields: [loteId], references: [id])
-  producto         Producto      @relation(fields: [productoId], references: [id])
-  presentacion     Presentacion  @relation(fields: [presentacionId], references: [id])
-  aspectoVisual    AspectoVisual @relation(fields: [aspectoVisualId], references: [id])
-  estadoCalidad    EstadoCalidad @relation(fields: [estadoCalidadId], references: [id])
+  lote             Lote            @relation(fields: [loteId], references: [id])
+  producto         Producto        @relation(fields: [productoId], references: [id])
+  presentacion     Presentacion    @relation(fields: [presentacionId], references: [id])
+  aspectoVisual    AspectoVisual   @relation(fields: [aspectoVisualId], references: [id])
+  estadoCalidad    EstadoCalidad   @relation(fields: [estadoCalidadId], references: [id])
 
   stock            StockActual?
   salidas          SalidaDetalle[]
@@ -317,21 +312,20 @@ model StockActual {
 // ============================================================
 // MOVIMIENTOS DE INGRESO
 // ============================================================
-
 model MovimientoIngreso {
-  id                 Int             @id @default(autoincrement())
-  ordenCompraId      Int             @map("orden_compra_id")
-  loteId             Int             @unique @map("lote_id")
-  createdAt          TimestampString @default(now()) @map("created_at")
-  fechaHoraRecepcion TimestampString @map("fecha_hora_recepcion")
+  id                 Int               @id @default(autoincrement())
+  ordenCompraId      Int               @map("orden_compra_id")
+  loteId             Int               @unique @map("lote_id")
+  createdAt          TimestamptzString @default(now()) @map("created_at")
+  fechaHoraRecepcion TimestamptzString @map("fecha_hora_recepcion")
   observacion        VarChar(250)?
-  usuarioId          Int             @map("usuario_id")
-  almacenId          Int             @map("almacen_id")
+  usuarioId          Int               @map("usuario_id")
+  almacenId          Int               @map("almacen_id")
 
-  ordenCompra        OrdenCompra     @relation(fields: [ordenCompraId], references: [id])
-  lote               Lote            @relation(fields: [loteId], references: [id])
-  usuario            Usuario         @relation(fields: [usuarioId], references: [id])
-  almacen            Almacen         @relation(fields: [almacenId], references: [id])
+  ordenCompra        OrdenCompra       @relation(fields: [ordenCompraId], references: [id])
+  lote               Lote              @relation(fields: [loteId], references: [id])
+  usuario            Usuario           @relation(fields: [usuarioId], references: [id])
+  almacen            Almacen           @relation(fields: [almacenId], references: [id])
 
   @@index([ordenCompraId])
   @@index([fechaHoraRecepcion])
@@ -341,24 +335,23 @@ model MovimientoIngreso {
 // ============================================================
 // MOVIMIENTOS DE SALIDA
 // ============================================================
-
 model MovimientoSalida {
-  id              Int             @id @default(autoincrement())
-  valeManual      VarChar(50)      @unique @map("vale_manual")
-  createdAt       TimestampString @default(now()) @map("created_at")
-  fechaHoraSalida TimestampString @map("fecha_hora_salida")
+  id              Int               @id @default(autoincrement())
+  valeManual      VarChar(50)       @unique @map("vale_manual")
+  createdAt       TimestamptzString @default(now()) @map("created_at")
+  fechaHoraSalida TimestamptzString @map("fecha_hora_salida")
   observacion     VarChar(250)?
-  clienteId       Int             @map("cliente_id")
-  vendedorId      Int             @map("vendedor_id")
-  estadoSalidaId  Int             @map("estado_salida_id")
-  usuarioId       Int             @map("usuario_id")
-  almacenId       Int             @map("almacen_id")
+  clienteId       Int               @map("cliente_id")
+  vendedorId      Int               @map("vendedor_id")
+  estadoSalidaId  Int               @map("estado_salida_id")
+  usuarioId       Int               @map("usuario_id")
+  almacenId       Int               @map("almacen_id")
 
-  cliente         Cliente         @relation(fields: [clienteId], references: [id])
-  vendedor        Colaborador     @relation("VendedorSalida", fields: [vendedorId], references: [id])
-  estadoSalida    EstadoSalida    @relation(fields: [estadoSalidaId], references: [id])
-  usuario         Usuario         @relation(fields: [usuarioId], references: [id])
-  almacen         Almacen         @relation(fields: [almacenId], references: [id])
+  cliente         Cliente           @relation(fields: [clienteId], references: [id])
+  vendedor        Colaborador       @relation("VendedorSalida", fields: [vendedorId], references: [id])
+  estadoSalida    EstadoSalida      @relation(fields: [estadoSalidaId], references: [id])
+  usuario         Usuario           @relation(fields: [usuarioId], references: [id])
+  almacen         Almacen           @relation(fields: [almacenId], references: [id])
 
   detalles        SalidaDetalle[]
 
@@ -386,19 +379,18 @@ model SalidaDetalle {
 // ============================================================
 // MERMA
 // ============================================================
-
 model Merma {
-  id            Int             @id @default(autoincrement())
-  loteDetalleId Int             @map("lote_detalle_id")
+  id            Int               @id @default(autoincrement())
+  loteDetalleId Int               @map("lote_detalle_id")
   cantidad      Int
-  createdAt     TimestampString @default(now()) @map("created_at")
-  mermaTipoId   Int             @map("merma_tipo_id")
-  usuarioId     Int             @map("usuario_id")
+  createdAt     TimestamptzString @default(now()) @map("created_at")
+  mermaTipoId   Int               @map("merma_tipo_id")
+  usuarioId     Int               @map("usuario_id")
   observacion   VarChar(150)?
 
-  loteDetalle   LoteDetalle     @relation(fields: [loteDetalleId], references: [id])
-  mermaTipo     MermaTipo       @relation(fields: [mermaTipoId], references: [id])
-  usuario       Usuario         @relation(fields: [usuarioId], references: [id])
+  loteDetalle   LoteDetalle       @relation(fields: [loteDetalleId], references: [id])
+  mermaTipo     MermaTipo         @relation(fields: [mermaTipoId], references: [id])
+  usuario       Usuario           @relation(fields: [usuarioId], references: [id])
 
   @@index([loteDetalleId])
   @@index([createdAt])

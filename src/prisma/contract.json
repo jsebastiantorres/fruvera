@@ -418,7 +418,7 @@
               "updatedAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               }
@@ -1378,7 +1378,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -1574,14 +1574,14 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
               "fechaHoraRecepcion": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -1740,7 +1740,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -1754,7 +1754,7 @@
               "fechaHoraSalida": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -1949,7 +1949,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -2217,7 +2217,7 @@
               "updatedAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               }
@@ -2374,7 +2374,7 @@
               "updatedAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               }
@@ -2610,7 +2610,7 @@
               "updatedAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               }
@@ -2777,7 +2777,7 @@
               "updatedAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamp-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -3153,8 +3153,8 @@
                   "nullable": false
                 },
                 "updated_at": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "nullable": true
                 }
               },
@@ -3959,8 +3959,8 @@
                   "nullable": false
                 },
                 "created_at": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -4151,8 +4151,8 @@
                   "nullable": false
                 },
                 "created_at": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -4160,8 +4160,8 @@
                   "nullable": false
                 },
                 "fecha_hora_recepcion": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "nullable": false
                 },
                 "id": {
@@ -4337,8 +4337,8 @@
                   "nullable": false
                 },
                 "created_at": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -4351,8 +4351,8 @@
                   "nullable": false
                 },
                 "fecha_hora_salida": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "nullable": false
                 },
                 "id": {
@@ -4562,8 +4562,8 @@
                   }
                 },
                 "created_at": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -4777,8 +4777,8 @@
                   }
                 },
                 "updated_at": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "nullable": true
                 }
               },
@@ -4894,8 +4894,8 @@
                   }
                 },
                 "updated_at": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "nullable": true
                 }
               },
@@ -5097,8 +5097,8 @@
                   "nullable": false
                 },
                 "updated_at": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "nullable": true
                 }
               },
@@ -5245,8 +5245,8 @@
                   "nullable": false
                 },
                 "updated_at": {
-                  "codecId": "pg/timestamp-string@1",
-                  "dataType": "pg/timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
                   "nullable": true
                 },
                 "usuario": {
@@ -5361,19 +5361,19 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "5a0b777c7a528a2276a3fe8e3f53a4e93bad8d1816e069ba4a6422db20cf6b2c"
+    "storageHash": "c595706e2e2f1a486072e920332bbb968077d316dc68bf2eec5f940fa5cbd327"
   },
   "execution": {
-    "executionHash": "501685269a39ce07b29985573dab19b44d9fcfc75f64272d866399c1118c06b7",
+    "executionHash": "e2b1c407f418d4be9430cff7173426e972854d5830ca091253ed3537fb23aed7",
     "mutations": {
       "defaults": [
         {
           "onCreate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "onUpdate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "ref": {
@@ -5384,11 +5384,11 @@
         },
         {
           "onCreate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "onUpdate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "ref": {
@@ -5399,11 +5399,11 @@
         },
         {
           "onCreate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "onUpdate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "ref": {
@@ -5414,11 +5414,11 @@
         },
         {
           "onCreate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "onUpdate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "ref": {
@@ -5429,11 +5429,11 @@
         },
         {
           "onCreate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "onUpdate": {
-            "id": "timestampStringNow",
+            "id": "timestamptzStringNow",
             "kind": "generator"
           },
           "ref": {
