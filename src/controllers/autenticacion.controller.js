@@ -1,6 +1,9 @@
 // import bcryptjs
 import bcrypt from "bcryptjs";
 
+// import pool para session
+import { pool } from "../db/pool.js";
+
 // import de repository
 import {
   getAllRoles,
@@ -12,8 +15,6 @@ import {
   resetPassword,
   changeEstado,
 } from "../repositories/atenticacion.repository.js";
-
-
 
 // CONTROLLER SECUNDARIOS NECESARIOS
 // Obtener roles
@@ -48,7 +49,6 @@ export const inciarSesion = async (req, res) => {
   try {
     // obtener usuario de db
     const obtenerUsuarioLogin = await getUsuarioLogin(usuario);
-    console.log("comparacion:");
 
     if (!obtenerUsuarioLogin || obtenerUsuarioLogin.estadoUsuarioId != 1) {
       return res
@@ -69,12 +69,42 @@ export const inciarSesion = async (req, res) => {
       return res.status(401).json({ error: "Caredenciales inválidas" });
     }
 
-    res.status(200).json({ message: "bienvenido" });
+    // SESSION
+    // Regenerar el ID sesion al iniciar session (evita: "session fixation")
+    req.session.regenerate(async (err) => {
+      if (err) {
+        return res.status(500).json({ error: "Error de sesion" });
+      }
+
+      try {
+        const { rows } = await pool.query(
+          `INSERT INTO historial_sesion (usuario_id, inicio, fin, ip)
+       VALUES ($1, now(), $2, $3)
+       RETURNING id`,
+          [obtenerUsuarioLogin.id, req.session.cookie.expires, req.ip],
+        );
+
+        // guardar solo lo necesario
+        req.session.usuario = {
+          id: obtenerUsuarioLogin.id,
+          rol: obtenerUsuarioLogin.rolId,
+          histId: rows[0].id,
+        };
+
+        console.log("Session Usuario", req.session.usuario);
+
+        req.session.save(() => res.json({ message: "sesion iniciada" }));
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error de sesión" });
+      }
+    });
+
+    // res.status(200).json({ message: "bienvenido" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // SOLO ADMINISTRADORES
 // Crear Usuario
@@ -135,7 +165,6 @@ export const registrarUsuario = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 
 // RESETEAR CONTRASEÑA (solo administradores)
 export const resetearPassword = async (req, res) => {

@@ -21,6 +21,30 @@ const PgSession = connectPgSimple(session);
 // PUERTO
 const PORT = process.env.PORT || 3001;
 
+// importar el pool
+import { pool } from "./src/db/pool.js";
+// const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+
+// configuracion del pool de sesion
+app.use(
+  session({
+    store: new PgSession({
+      pool,
+      tableName: "session",
+      createTableIfMissing: false,
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 100 * 60 * 60,
+    },
+  }),
+);
+
 // IMPORTACION DE RUTAS
 // ruta autenticacion
 import autenticacionRoute from "./src/routes/autenticacion.route.js";
