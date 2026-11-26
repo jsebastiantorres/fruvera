@@ -147,7 +147,6 @@ export const validacionUsuario = async (req, res, next) => {
   }
 };
 
-
 // validacion reseteo
 export const validacionReseteo = async (req, res, next) => {
   const { usuario, nueva_password } = req.body;
@@ -173,3 +172,18 @@ export const validacionReseteo = async (req, res, next) => {
   }
 };
 
+// validacion de session (que tenga un token valido para ejecutar una operación)
+export const validacionTokenSession = async (req, res, next) => {
+  try {
+    // si no exixte una session no continua la operación
+    if (!req.session.usuario) {
+      return res
+        .status(401)
+        .json({ message: "Es necesario iniciar sesión" });
+    }
+
+    return next();
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
+};

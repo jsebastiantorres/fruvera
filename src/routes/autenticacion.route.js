@@ -8,7 +8,7 @@ import {
   obtenerEstados,
   inciarSesion,
   resetearPassword,
-  cambiarEstado
+  cambiarEstado,
 } from "../controllers/autenticacion.controller.js";
 
 // import middleware
@@ -16,22 +16,37 @@ import {
   validacionDatosRegistro,
   validacionLogin,
   validacionUsuario,
-  validacionReseteo
+  validacionReseteo,
+  validacionTokenSession,
 } from "../middlewares/autenticacion.middleware.js";
 const router = express.Router();
 
 // registrar usuario
-router.post("/registro", validacionDatosRegistro, registrarUsuario);
+router.post(
+  "/registro",
+  validacionTokenSession,
+  validacionDatosRegistro,
+  registrarUsuario,
+);
 
 // iniciar sesion
 router.post("/login", validacionLogin, inciarSesion);
 
 // resetar contraseñas
-router.post("/reseteo", validacionReseteo, resetearPassword);
+router.post(
+  "/reseteo",
+  validacionTokenSession,
+  validacionReseteo,
+  resetearPassword,
+);
 
 // resetar inactivación de usuario
-router.post("/cambiarEstado", validacionUsuario, cambiarEstado);
-
+router.post(
+  "/cambiarEstado",
+  validacionTokenSession,
+  validacionUsuario,
+  cambiarEstado,
+);
 
 // RUTAS SECUNDARIAS NECESARIAS
 // obtener roles

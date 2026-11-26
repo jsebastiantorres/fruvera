@@ -110,7 +110,7 @@ export const inciarSesion = async (req, res) => {
 // Crear Usuario
 export const registrarUsuario = async (req, res) => {
   try {
-    console.log("entrando al controlador");
+    console.log("entrando al controlador de registro");
 
     const { nombres, apellidos, documento, telefono, usuario, password } =
       req.body;
