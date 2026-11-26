@@ -120,7 +120,7 @@ export const validacionLogin = async (req, res, next) => {
     if (usuario.length < 4 || usuario.length > 15) {
       return res.status(400).json({
         error: "Bad Request",
-        message: `Verificar el usuario e intenta nuevamente`,
+        message: `Verificar el usuario e intentar nuevamente`,
       });
     }
     return next();
@@ -146,3 +146,30 @@ export const validacionUsuario = async (req, res, next) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+
+// validacion reseteo
+export const validacionReseteo = async (req, res, next) => {
+  const { usuario, nueva_password } = req.body;
+
+  try {
+    if (!usuario || !nueva_password) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: `los campos son abligatorios.`,
+      });
+    }
+
+    // verificacion longitud
+    if (usuario.length < 4 || usuario.length > 15) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: `Verificar el usuario e intentar nuevamente`,
+      });
+    }
+    return next();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+

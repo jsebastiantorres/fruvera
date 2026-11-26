@@ -15,7 +15,8 @@ import {
 import {
   validacionDatosRegistro,
   validacionLogin,
-  validacionUsuario
+  validacionUsuario,
+  validacionReseteo
 } from "../middlewares/autenticacion.middleware.js";
 const router = express.Router();
 
@@ -26,7 +27,7 @@ router.post("/registro", validacionDatosRegistro, registrarUsuario);
 router.post("/login", validacionLogin, inciarSesion);
 
 // resetar contraseñas
-router.post("/reseteo", validacionLogin, resetearPassword);
+router.post("/reseteo", validacionReseteo, resetearPassword);
 
 // resetar inactivación de usuario
 router.post("/cambiarEstado", validacionUsuario, cambiarEstado);

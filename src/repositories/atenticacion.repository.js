@@ -51,9 +51,9 @@ export async function getUsuarioLogin(usuario) {
 
 // FUNCIONES ADMINISTRADOR
 // resetear contraseña
-export async function resetPassword(usuario, password) {
+export async function resetPassword(usuario, nueva_password) {
   return db.orm.public.Usuario.where({ usuario: usuario }).update({
-    hashPassword: password,
+    hashPassword: nueva_password,
   });
 }
 

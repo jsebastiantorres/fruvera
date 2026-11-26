@@ -168,7 +168,7 @@ export const registrarUsuario = async (req, res) => {
 
 // RESETEAR CONTRASEÑA (solo administradores)
 export const resetearPassword = async (req, res) => {
-  const { usuario, password } = req.body;
+  const { usuario, nueva_password } = req.body;
 
   try {
     const obtenerUsuario = await getUsuarioLogin(usuario);
@@ -177,15 +177,15 @@ export const resetearPassword = async (req, res) => {
     if (!obtenerUsuario || obtenerUsuario.estadoUsuarioId != 1) {
       return res
         .status(401)
-        .json({ message: "no se encuentra el usuario o esta inactivo" });
+        .json({ message: "Caredenciales inválidas" });
     }
 
-    const passwordHashed = await bcrypt.hash(password, 10);
+    const passwordHashed = await bcrypt.hash(nueva_password, 10);
     const reseteoPassword = await resetPassword(usuario, passwordHashed);
 
-    res.status(200).json({ message: "contraseña reseteada" });
+    res.status(200).json({ message: "proceso completado" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
