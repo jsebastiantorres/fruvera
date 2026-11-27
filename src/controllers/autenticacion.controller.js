@@ -155,7 +155,7 @@ export const registrarUsuario = async (req, res) => {
 
     console.log(`usuarioCreado ${usuarioCreado}`);
 
-    // Registro correto "demo"
+    // Registro correto se devuelve solo el alias
     console.log("usuario registrado");
     res.status(200).json({
       usuario: usuarioCreado.usuario,
@@ -225,7 +225,7 @@ export const cambiarEstado = async (req, res) => {
     }
 
     // de inactivo a activo
-    if (obtenerUsuario.estadoUsuarioId == 2) {
+    if (obtenerUsuario.estadoUsuarioId != 1) {
       let nuevoEstado = 1;
       const actualizarEstado = await changeEstado(
         obtenerUsuario.usuario,
