@@ -158,7 +158,7 @@ export const registrarUsuario = async (req, res) => {
     // Registro correto "demo"
     console.log("usuario registrado");
     res.status(200).json({
-      usuarioCreado,
+      usuario: usuarioCreado.usuario,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -181,7 +181,10 @@ export const resetearPassword = async (req, res) => {
     ) {
       return res
         .status(401)
-        .json({ message: "No tiene permiso para esta operación, contacte al adminstrador del sistema" });
+        .json({
+          message:
+            "No tiene permiso para esta operación, contacte al adminstrador del sistema",
+        });
     }
 
     const passwordHashed = await bcrypt.hash(nueva_password, 10);
