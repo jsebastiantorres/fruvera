@@ -46,6 +46,7 @@ router.post(
 router.post(
   "/cambiarEstado",
   validacionTokenSession,
+  validacionRolAdmin,
   validacionUsuario,
   cambiarEstado,
 );
