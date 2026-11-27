@@ -18,6 +18,7 @@ import {
   validacionUsuario,
   validacionReseteo,
   validacionTokenSession,
+  validacionRolAdmin,
 } from "../middlewares/autenticacion.middleware.js";
 const router = express.Router();
 
@@ -37,6 +38,7 @@ router.post(
   "/reseteo",
   validacionTokenSession,
   validacionReseteo,
+  validacionRolAdmin,
   resetearPassword,
 );
 

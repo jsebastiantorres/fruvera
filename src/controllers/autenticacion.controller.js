@@ -138,7 +138,6 @@ export const registrarUsuario = async (req, res) => {
     const rol = await getRolUsuario();
     console.log(rol);
 
-    // log
     console.log(
       `${colaboradorCreado.id}, estado: ${estadoActivo.id}, rol: ${[rol.id, rol.nombre]}`,
     );
@@ -174,10 +173,15 @@ export const resetearPassword = async (req, res) => {
     const obtenerUsuario = await getUsuarioLogin(usuario);
     console.log(obtenerUsuario);
 
-    if (!obtenerUsuario || obtenerUsuario.estadoUsuarioId != 1) {
+    // validacion de existencia, estado o rol
+    if (
+      !obtenerUsuario ||
+      obtenerUsuario.estadoUsuarioId != 1 ||
+      obtenerUsuario.rolId == 1
+    ) {
       return res
         .status(401)
-        .json({ message: "Caredenciales inválidas" });
+        .json({ message: "No tiene permiso para esta operación, contacte al adminstrador del sistema" });
     }
 
     const passwordHashed = await bcrypt.hash(nueva_password, 10);

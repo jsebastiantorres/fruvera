@@ -177,11 +177,22 @@ export const validacionTokenSession = async (req, res, next) => {
   try {
     // si no exixte una session no continua la operación
     if (!req.session.usuario) {
-      return res
-        .status(401)
-        .json({ message: "Es necesario iniciar sesión" });
+      return res.status(401).json({ message: "Es necesario iniciar sesión" });
     }
 
+    return next();
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
+};
+
+// validacion de rol administrador
+export const validacionRolAdmin = async (req, res, next) => {
+  try {
+    if (req.session.usuario.rol != 1) {
+      console.log("el usuario no es admin");
+      return res.status(401).json({ message: "Necesita ser administrador" });
+    }
     return next();
   } catch (error) {
     res.status(401).json({ message: error.message });
